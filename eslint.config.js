@@ -9,7 +9,16 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', '.pnp.cjs', '.pnp.loader.mjs'] },
+  {
+    ignores: [
+      'dist',
+      'node_modules',
+      '.pnp.cjs',
+      '.pnp.loader.mjs',
+      '.yarn',
+      '__mocks__',
+    ],
+  },
   {
     extends: [js.configs.recommended, eslintPluginPrettierRecommended],
     plugins: {
