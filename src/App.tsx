@@ -1,23 +1,33 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 
 import Layout from '@/components/common/Layout';
-import Cart from '@/pages/Cart';
-import Home from '@/pages/Home';
-import TripDetail from '@/pages/TripDetail';
-import TripSearch from '@/pages/TripSearch';
+import { Toaster } from '@/components/ui/sonner';
+import { ToastProvider } from '@/contexts/ToastContext';
+import CartPage from '@/pages/CartPage';
+import HomePage from '@/pages/HomePage';
+import LoginPage from '@/pages/LoginPage';
+import TripDetailPage from '@/pages/TripDetailPage';
+import TripSearchPage from '@/pages/TripSearchPage';
+import { QueryProvider } from '@/providers/QueryProvider';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/trip/:id" element={<TripDetail />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/search" element={<TripSearch />} />
-        </Routes>
-      </Layout>
-    </BrowserRouter>
+    <QueryProvider>
+      <ToastProvider>
+        <BrowserRouter>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/trip/:id" element={<TripDetailPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/search" element={<TripSearchPage />} />
+              <Route path="/login" element={<LoginPage />} />
+            </Routes>
+          </Layout>
+        </BrowserRouter>
+        <Toaster />
+      </ToastProvider>
+    </QueryProvider>
   );
 }
 

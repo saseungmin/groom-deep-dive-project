@@ -8,56 +8,38 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { searchTrips } from '@/services/tripService';
-import type { Trip } from '@/types/trip';
+import useSearchTripsQuery from '@/hooks/queries/trip/useSearchTripsQuery';
 
-const TripSearch = () => {
+const TripSearchPage = () => {
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [trips, setTrips] = useState<Trip[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
-  // URL 쿼리 파라미터에서 검색어 가져오기
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const query = params.get('q') || '';
-    setSearchQuery(query);
-
-    if (query) {
-      handleSearch(query);
-    }
-  }, [location.search]);
-
-  const handleSearch = async (query: string) => {
-    setIsLoading(true);
-    try {
-      const results = await searchTrips(query);
-      setTrips(results);
-    } catch (error) {
-      console.error('Failed to search trips:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { data: trips = [], isLoading } = useSearchTripsQuery(searchQuery);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleSearch(searchQuery);
   };
 
   const toggleFilter = (filter: string) => {
     if (activeFilters.includes(filter)) {
       setActiveFilters(activeFilters.filter((f) => f !== filter));
-    } else {
-      setActiveFilters([...activeFilters, filter]);
+      return;
     }
+
+    setActiveFilters([...activeFilters, filter]);
   };
 
   const clearFilters = () => {
     setActiveFilters([]);
   };
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const query = params.get('q') || '';
+    setSearchQuery(query);
+  }, [location.search]);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -215,4 +197,4 @@ const TripSearch = () => {
   );
 };
 
-export default TripSearch;
+export default TripSearchPage;

@@ -27,7 +27,7 @@ const mockCartItems: (Omit<CartItem, 'trip'> & { trip?: Trip })[] = [
   },
 ];
 
-const Cart = () => {
+function CartPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -247,6 +247,6 @@ const Cart = () => {
       </div>
     </div>
   );
-};
+}
 
-export default Cart;
+export default CartPage;

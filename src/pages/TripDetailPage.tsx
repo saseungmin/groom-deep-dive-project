@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 
 import dayjs from 'dayjs';
@@ -14,39 +14,16 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { fetchTripById } from '@/services/tripService';
-import type { Trip } from '@/types/trip';
+import { useToast } from '@/contexts/ToastContext';
+import useTripDetailSuspenseQuery from '@/hooks/queries/trip/useTripDetailSuspenseQuery';
 
 const TripDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const [trip, setTrip] = useState<Trip | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: trip } = useTripDetailSuspenseQuery(id || '');
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [people, setPeople] = useState(1);
 
-  useEffect(() => {
-    const loadTrip = async () => {
-      if (!id) return;
-
-      setIsLoading(true);
-      try {
-        const tripData = await fetchTripById(id);
-        if (tripData) {
-          setTrip(tripData);
-          // 기본 날짜 설정 (첫 번째 가능한 날짜)
-          if (tripData.availableDates && tripData.availableDates.length > 0) {
-            setSelectedDate(tripData.availableDates[0]);
-          }
-        }
-      } catch (error) {
-        console.error('Failed to load trip details:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadTrip();
-  }, [id]);
+  const { toast } = useToast();
 
   const handleAddToCart = () => {
     console.log('Added to cart:', {
@@ -55,7 +32,8 @@ const TripDetail = () => {
       people,
       totalPrice: calculateTotalPrice(),
     });
-    // 실제 구현: 장바구니에 추가하는 로직
+
+    toast.success('장바구니에 추가되었습니다.');
   };
 
   const calculateTotalPrice = () => {
@@ -69,16 +47,15 @@ const TripDetail = () => {
     return discountedPrice * people;
   };
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto p-4 animate-pulse">
-        <div className="bg-gray-200 h-[400px] rounded-lg mb-6"></div>
-        <div className="bg-gray-200 h-10 w-2/3 mb-4 rounded"></div>
-        <div className="bg-gray-200 h-6 w-1/3 mb-8 rounded"></div>
-        {/* 더 많은 스켈레톤 UI */}
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (
+      trip?.availableDates &&
+      trip.availableDates.length > 0 &&
+      !selectedDate
+    ) {
+      setSelectedDate(trip.availableDates[0]);
+    }
+  }, [trip, selectedDate]);
 
   if (!trip) {
     return (
@@ -346,4 +323,20 @@ const TripDetail = () => {
   );
 };
 
-export default TripDetail;
+const TripDetailSkeleton = () => (
+  <div className="container mx-auto p-4 animate-pulse">
+    <div className="bg-gray-200 h-[400px] rounded-lg mb-6"></div>
+    <div className="bg-gray-200 h-10 w-2/3 mb-4 rounded"></div>
+    <div className="bg-gray-200 h-6 w-1/3 mb-8 rounded"></div>
+  </div>
+);
+
+const TripDetailPage = () => {
+  return (
+    <Suspense fallback={<TripDetailSkeleton />}>
+      <TripDetail />
+    </Suspense>
+  );
+};
+
+export default TripDetailPage;

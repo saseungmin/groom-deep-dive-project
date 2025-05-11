@@ -10,11 +10,11 @@ export type Trip = {
   rating: number;
   reviewCount: number;
   tags?: string[];
-  duration: number; // 일 수
-  availableDates?: string[]; // ISO 형식의 날짜 문자열
-  packageIncludes?: string[]; // 패키지에 포함된 항목들
+  duration: number;
+  availableDates?: string[];
+  packageIncludes?: string[];
   itinerary?: TripDay[];
-  maxPeople?: number; // 최대 인원
+  maxPeople?: number;
 };
 
 export type TripDay = {

@@ -12,9 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { useToast } from '@/contexts/ToastContext';
 import type { Trip } from '@/types/trip';
 
-type TripCardProps = Pick<
+export type TripCardProps = Pick<
   Trip,
   | 'id'
   | 'title'
@@ -40,6 +41,8 @@ const TripCard = ({
 
   const finalPrice = price - (price * discount) / 100;
 
+  const { toast } = useToast();
+
   return (
     <Card className="h-full overflow-hidden">
       <div className="relative">
@@ -48,7 +51,14 @@ const TripCard = ({
           variant="ghost"
           size="icon"
           className="absolute top-2 right-2 bg-white/80 rounded-full p-1.5"
-          onClick={() => setIsFavorite(!isFavorite)}
+          onClick={() => {
+            setIsFavorite(!isFavorite);
+            toast.success(
+              isFavorite
+                ? '찜 목록에서 제거되었습니다.'
+                : '찜 목록에 추가되었습니다.',
+            );
+          }}
         >
           <Heart
             className={`h-5 w-5 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`}
