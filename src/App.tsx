@@ -1,15 +1,22 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 
-import MainPage from '@/pages/Main/MainPage';
-
-import './App.css';
+import Layout from '@/components/common/Layout';
+import Cart from '@/pages/Cart';
+import Home from '@/pages/Home';
+import TripDetail from '@/pages/TripDetail';
+import TripSearch from '@/pages/TripSearch';
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-      </Routes>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/trip/:id" element={<TripDetail />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/search" element={<TripSearch />} />
+        </Routes>
+      </Layout>
     </BrowserRouter>
   );
 }
