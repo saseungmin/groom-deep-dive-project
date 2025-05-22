@@ -1988,16 +1988,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-oauth/google@npm:^0.12.2":
-  version: 0.12.2
-  resolution: "@react-oauth/google@npm:0.12.2"
-  peerDependencies:
-    react: ">=16.8.0"
-    react-dom: ">=16.8.0"
-  checksum: 10c0/659c0d703339ca98df5ddb05c6c78868a291ddefa9ded995acb1e6eeed1e83bc05da4720420f868ecebbef242faac44a48a8dae86487da008521a0678e03edeb
-  languageName: node
-  linkType: hard
-
 "@rollup/rollup-android-arm-eabi@npm:4.41.0":
   version: 4.41.0
   resolution: "@rollup/rollup-android-arm-eabi@npm:4.41.0"
@@ -5173,7 +5163,6 @@ __metadata:
     "@radix-ui/react-label": "npm:^2.1.6"
     "@radix-ui/react-select": "npm:^2.2.4"
     "@radix-ui/react-slot": "npm:^1.2.2"
-    "@react-oauth/google": "npm:^0.12.2"
     "@supabase/supabase-js": "npm:^2.49.4"
     "@swc/core": "npm:^1.11.24"
     "@swc/jest": "npm:^0.2.38"
