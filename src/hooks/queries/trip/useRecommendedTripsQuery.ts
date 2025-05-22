@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { tripKeys } from '@/lib/constants/queryKeys';
 import { fetchRecommendedTrips } from '@/services/tripService';
 
 function useRecommendedTripsQuery() {
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryKey: tripKeys.recommendedTrips,
     queryFn: fetchRecommendedTrips,
   });
