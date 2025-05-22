@@ -90,13 +90,13 @@ jobs:
       - name: Changed Files Lint Check on PR
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          CHANGED_FILES=$(git diff --name-only --diff-filter=d origin/main | grep -E '^app/.*\.(js|jsx|ts|tsx)$' || true)
+          CHANGED_FILES=$(git diff --name-only --diff-filter=d origin/main | grep -E '^src/.*\.(js|jsx|ts|tsx)$' || true)
           if [ ! -z "$CHANGED_FILES" ]; then
             echo "Checking files:"
             echo "$CHANGED_FILES"
             yarn run eslint $CHANGED_FILES
           else
-            echo "No app/ directory files changed"
+            echo "No src/ directory files changed"
           fi
 
       - name: Check Unit Test
