@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
 
@@ -26,6 +26,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/contexts/ToastContext';
 import { initiateGoogleLogin } from '@/services/googleAuth';
+import { initializeKakao, initiateKakaoLogin } from '@/services/kakaoAuth';
 
 const loginFormSchema = z.object({
   email: z
@@ -41,6 +42,10 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    initializeKakao();
+  }, []);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -63,6 +68,10 @@ export default function LoginPage() {
 
   const handleGoogleLogin = () => {
     initiateGoogleLogin();
+  };
+
+  const handleKakaoLogin = () => {
+    initiateKakaoLogin();
   };
 
   return (
@@ -152,7 +161,11 @@ export default function LoginPage() {
             >
               Google로 계속하기
             </Button>
-            <Button variant="outline" className="w-full">
+            <Button
+              variant="outline"
+              className="w-full bg-[#FEE500] hover:bg-[#FEE500]/90 text-black border-[#FEE500]"
+              onClick={handleKakaoLogin}
+            >
               Kakao로 계속하기
             </Button>
           </div>
