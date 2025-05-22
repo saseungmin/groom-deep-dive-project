@@ -11,7 +11,7 @@ interface GoogleAuthResponse {
 // Google OAuth 2.0 인증 엔드포인트
 const OAUTH2_ENDPOINT = 'https://accounts.google.com/o/oauth2/v2/auth';
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-const REDIRECT_URI = `${window.location.origin}/auth/callback`;
+const REDIRECT_URI = `${window.location.origin}/auth/google/callback`;
 const SCOPE = 'email profile';
 
 /**
