@@ -1,20 +1,42 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 
-import { Search, ShoppingCart, User } from 'lucide-react';
+import { LogOut, Search, ShoppingCart, User } from 'lucide-react';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/contexts/ToastContext';
+import { useAuthStore } from '@/stores/authStore';
 
 const Header = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const { user, isAuthenticated, logout } = useAuthStore();
+  const { toast } = useToast();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    toast.success({
+      title: '로그아웃 성공',
+      description: '성공적으로 로그아웃되었습니다.',
+    });
+    navigate('/');
   };
 
   return (
@@ -50,16 +72,37 @@ const Header = () => {
               <ShoppingCart className="h-5 w-5" />
             </Button>
           </Link>
-          <Link to="/my-page">
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
-            </Button>
-          </Link>
-          <Link to="/login">
-            <Button variant="outline" size="sm">
-              로그인
-            </Button>
-          </Link>
+
+          {isAuthenticated && user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.picture} alt={user.name} />
+                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>내 계정</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate('/my-page')}>
+                  <User className="h-4 w-4 mr-2" />
+                  마이페이지
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  로그아웃
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link to="/login">
+              <Button variant="outline" size="sm">
+                로그인
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </header>
